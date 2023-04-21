@@ -1,0 +1,7 @@
+C:\Users\Adm\Desktop\myDocs\DocWiley\rockPaperScissors\rockPaperScissors\rockPaperScissors\obj\Debug\rockPaperScissors.csproj.AssemblyReference.cache
+C:\Users\Adm\Desktop\myDocs\DocWiley\rockPaperScissors\rockPaperScissors\rockPaperScissors\obj\Debug\rockPaperScissors.csproj.CoreCompileInputs.cache
+C:\Users\Adm\Desktop\myDocs\DocWiley\rockPaperScissors\rockPaperScissors\rockPaperScissors\bin\Debug\rockPaperScissors.exe.config
+C:\Users\Adm\Desktop\myDocs\DocWiley\rockPaperScissors\rockPaperScissors\rockPaperScissors\bin\Debug\rockPaperScissors.exe
+C:\Users\Adm\Desktop\myDocs\DocWiley\rockPaperScissors\rockPaperScissors\rockPaperScissors\bin\Debug\rockPaperScissors.pdb
+C:\Users\Adm\Desktop\myDocs\DocWiley\rockPaperScissors\rockPaperScissors\rockPaperScissors\obj\Debug\rockPaperScissors.exe
+C:\Users\Adm\Desktop\myDocs\DocWiley\rockPaperScissors\rockPaperScissors\rockPaperScissors\obj\Debug\rockPaperScissors.pdb
