@@ -61,7 +61,7 @@ namespace rockPaperScissors
 
 
 
-            for (int j = 0; j < 10; j++)
+            for (int i = 0; i < 10; i++)
             {
 
                 Console.WriteLine(username + ": " + p1wins + " vs " + computerplayer + ": " + p1loses);
@@ -78,46 +78,59 @@ namespace rockPaperScissors
                     {
                         Console.WriteLine(username + " Loses!");
                     }
-
+                    Console.ReadLine();
                     break;
                 }
 
-                
+                bool correctAbbreviation = false;
+                rockPaperScissors.Action p1action = actions[0];
+
+                //Ask for input until a correct input is given.
+                do {
                     //Start sentance (use write instead of writeline so not make a new line.
                     Console.Write(username + " choose ");
 
                     //Use the quantity of plays to go through each to write the possible options.
-                    for (int i = 0; i < actions.Length; i++)
+                    for (int j = 0; j < actions.Length; j++)
                     {
                         //Print Play
-                        Console.Write(actions[i].actionName + "(" + actions[i].abbreviation + ")");
+                        Console.Write(actions[j].actionName + "(" + actions[j].abbreviation + ")");
 
                         //If second to last play write or
-                        if (i == (actions.Length - 2))
+                        if (j == (actions.Length - 2))
                         {
                             Console.Write(" or ");
                         }
                         //Otherwise put a , with a space
-                        else if (i != (actions.Length - 1))
+                        else if (j != (actions.Length - 1))
                         {
                             Console.Write(", ");
                         }
                     }
-                    Console.Write(".");
+                    Console.WriteLine(".");
                     string actionChosen = (Console.ReadLine());
-                    rockPaperScissors.Action p1action = actions[0];
+                    
 
-                    for (int i = 0; i < actions.Length; i++)
+                    for (int j = 0; j < actions.Length; j++)
                     {
 
-                        if (actions[i].abbreviation == actionChosen)
+                        if (actions[j].abbreviation == actionChosen)
                         {
-                            Console.WriteLine(username + " chose: " + actions[i].actionName);
-                            p1action = actions[i];
+                            Console.WriteLine(username + " chose: " + actions[j].actionName);
+                            p1action = actions[j];
+                            correctAbbreviation = true;
                         }
 
                     }
 
+                    if(correctAbbreviation == false)
+                    {
+                        Console.WriteLine("incorrect input.");
+                    }
+
+
+                } while (correctAbbreviation == false);
+                
                     Random numberGen = new Random();
                     int p2Choice = 0;
                     p2Choice = numberGen.Next(0, actions.Length);
@@ -126,15 +139,15 @@ namespace rockPaperScissors
 
                     Console.WriteLine(computerplayer + " chose: " + p2action.actionName);
 
-                    for (int i = 0; i < p1action.actionBeats.Length; i++)
+                    for (int j = 0; j < p1action.actionBeats.Length; j++)
                     {
-                        if (p1action.actionBeats[i] == p2action.actionName)
+                        if (p1action.actionBeats[j] == p2action.actionName)
                         {
                             Console.WriteLine(username + " wins! ");
                             p1wins++;
 
                         }
-                        else if (p1action.actionLosesto[i] == p2action.actionName)
+                        else if (p1action.actionLosesto[j] == p2action.actionName)
                         {
                             Console.WriteLine(username + " loses! ");
                             p1loses++;
@@ -158,7 +171,7 @@ namespace rockPaperScissors
                 //Intro
 
 
-                Console.ReadLine();
+                
             }
         }
     }
