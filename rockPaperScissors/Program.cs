@@ -49,28 +49,32 @@ namespace rockPaperScissors
             Console.WriteLine("Welcome to rock paper scissors C# Practice!");
 
             //ask for and store users name.
-            Console.WriteLine("Enter your User name:");
+            Console.WriteLine("Enter your user name:");
             string username = Console.ReadLine();
             string computerplayer = "CPU1";
 
             //Greet User
-            Console.WriteLine("Hello " + username + "!");
+            Console.WriteLine("Hello " + username + "! Lets play rock paper scissors 3 out of 5.");
 
+            //Vars for tracking player wins and loses
             int p1wins = 0;
             int p1loses = 0;
 
+            //Who many wins you need to win a game
+            int scoreToWin = 3;
 
-
-            for (int i = 0; i < 10; i++)
+            
+            //Do while loop until a player has wins equal to the score to win.
+            do
             {
 
                 Console.WriteLine(username + ": " + p1wins + " vs " + computerplayer + ": " + p1loses);
 
-                if (p1wins == 3 || p1loses == 3)
+                if (p1wins == scoreToWin || p1loses == scoreToWin)
                 {
                     Console.WriteLine(username + ": " + p1wins + " vs " + computerplayer + ": " + p1loses);
 
-                    if (p1wins == 3)
+                    if (p1wins == scoreToWin)
                     {
                         Console.WriteLine(username + " Wins!");
                     }
@@ -172,7 +176,7 @@ namespace rockPaperScissors
 
 
                 
-            }
+            } while (p1wins != scoreToWin || p1loses != scoreToWin) ;
         }
     }
 }
