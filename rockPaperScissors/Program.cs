@@ -14,20 +14,48 @@ using System;
 namespace rockPaperScissors
 {
 
-    class Action
+    class Entity
     {
-        public string actionName { get; }
-        public string abbreviation { get; }
-        public string[] actionBeats { get; set; }
-        public string[] actionLosesto { get; set; }
+        public string name { get; set; }
 
-        public Action(string name, string abbrv, string[] beats, string[] losesto)
+        //this will be for use in key board games later I will remove this
+        public string abbreviation { get; set; }
+
+        //For some reason withouth a contruct with no values I get an error >.> not sure why
+        public Entity()
         {
-            actionName = name;
-            abbreviation = abbrv;
-            actionBeats = beats;
-            actionLosesto = losesto;
         }
+
+        public Entity(string entityName, string entityAbbreviation)
+        {
+            name = entityName;
+            abbreviation = entityAbbreviation;
+        }
+    }
+
+    class Action: Entity
+    {
+        public string type { get; set; }
+        public string[] advantage { get; set; }
+        public string[] disadvantage { get; set; }
+
+            public Action()
+            {
+            }
+
+            public Action(string entityName, string actionType, string entityAbbreviation, string[] actionAdvantage, string[] actionDisadvantage)
+        {
+            name = entityName;
+            type = actionType;
+            abbreviation = entityAbbreviation;
+            advantage = actionAdvantage;
+            disadvantage = actionDisadvantage;
+        }
+
+    }
+
+    class Special : Action
+    {
 
     }
 
@@ -37,9 +65,9 @@ namespace rockPaperScissors
         {
 
             //Create all options in game
-            rockPaperScissors.Action rock = new Action("rock", "r", new string[] { "scissors" }, new string[] { "paper" });
-            rockPaperScissors.Action paper = new Action("paper", "p", new string[] { "rock" }, new string[] { "scissors" });
-            rockPaperScissors.Action scissors = new Action("scissors", "s", new string[] { "paper" }, new string[] { "rock" });
+            rockPaperScissors.Action rock = new Action("rock", "rock", "r", new string[] { "scissors" }, new string[] { "paper" });
+            rockPaperScissors.Action paper = new Action("paper", "paper", "p", new string[] { "rock" }, new string[] { "scissors" });
+            rockPaperScissors.Action scissors = new Action("scissors", "scissors", "s", new string[] { "paper" }, new string[] { "rock" });
 
             //create array with all actions
             rockPaperScissors.Action[] actions = { rock, paper, scissors };
@@ -76,11 +104,23 @@ namespace rockPaperScissors
 
                     if (p1wins == scoreToWin)
                     {
+                        Console.WriteLine(@" __     __          __          ___       ");
+                        Console.WriteLine(@" \ \   / /          \ \        / (_)      ");
+                        Console.WriteLine(@"  \ \_/ /__  _   _   \ \  /\  / / _ _ __  ");
+                        Console.WriteLine(@"   \   / _ \| | | |   \ \/  \/ / | | '_ \ ");
+                        Console.WriteLine(@"    | | (_) | |_| |    \  /\  /  | | | | |");
+                        Console.WriteLine(@"    |_|\___/ \__,_|     \/  \/   |_|_| |_|");
                         Console.WriteLine(username + " Wins!");
                     }
                     else
                     {
-                        Console.WriteLine(username + " Loses!");
+                    Console.WriteLine(@" __     __           _                    ");
+                    Console.WriteLine(@" \ \   / /          | |                   ");
+                    Console.WriteLine(@"  \ \_/ /__  _   _  | |     ___  ___  ___ ");
+                    Console.WriteLine(@"   \   / _ \| | | | | |    / _ \/ __|/ _ \");
+                    Console.WriteLine(@"    | | (_) | |_| | | |___| (_) \__ \  __/");
+                    Console.WriteLine(@"    |_|\___/ \__,_| |______\___/|___/\___|");
+                    Console.WriteLine(username + " Loses!");
                     }
                     Console.ReadLine();
                     break;
@@ -98,7 +138,7 @@ namespace rockPaperScissors
                     for (int j = 0; j < actions.Length; j++)
                     {
                         //Print Play
-                        Console.Write(actions[j].actionName + "(" + actions[j].abbreviation + ")");
+                        Console.Write(actions[j].type + "(" + actions[j].abbreviation + ")");
 
                         //If second to last play write or
                         if (j == (actions.Length - 2))
@@ -120,7 +160,7 @@ namespace rockPaperScissors
 
                         if (actions[j].abbreviation == actionChosen)
                         {
-                            Console.WriteLine(username + " chose: " + actions[j].actionName);
+                            Console.WriteLine(username + " chose: " + actions[j].type);
                             p1action = actions[j];
                             correctAbbreviation = true;
                         }
@@ -141,23 +181,23 @@ namespace rockPaperScissors
 
                     rockPaperScissors.Action p2action = actions[p2Choice];
 
-                    Console.WriteLine(computerplayer + " chose: " + p2action.actionName);
+                    Console.WriteLine(computerplayer + " chose: " + p2action.type);
 
-                    for (int j = 0; j < p1action.actionBeats.Length; j++)
+                    for (int j = 0; j < p1action.advantage.Length; j++)
                     {
-                        if (p1action.actionBeats[j] == p2action.actionName)
+                        if (p1action.advantage[j] == p2action.type)
                         {
                             Console.WriteLine(username + " wins! ");
                             p1wins++;
 
                         }
-                        else if (p1action.actionLosesto[j] == p2action.actionName)
+                        else if (p1action.disadvantage[j] == p2action.type)
                         {
                             Console.WriteLine(username + " loses! ");
                             p1loses++;
 
                         }
-                        else if (p1action.actionName == p2action.actionName)
+                        else if (p1action.type == p2action.type)
                         {
                             Console.WriteLine(" DRAW ");
                         }
