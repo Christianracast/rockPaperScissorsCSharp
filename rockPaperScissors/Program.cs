@@ -33,17 +33,76 @@ namespace rockPaperScissors
         }
     }
 
+    enum States
+    {
+        Standing,
+        Cooldown,
+        Charging,
+        Waiting,
+        Attacking,
+        Blocking,
+        Defensive,
+        Grabbed,
+        Prone,
+        Moving,
+        Jumping,
+        Flying,
+        Crouching,
+        GettingHit,
+
+    }
+
+    enum Positions
+    {
+        frontline,
+        rearguard
+    }
+    enum Types
+    {
+        Rock,
+        Paper,
+        Scissor
+    }
+
+
+    class Meb : Entity
+    {
+        public int endurance { get; set; }
+        public int enduranceModifier { get; set; }
+        public int speed { get; set; }
+        public int speedModifier { get; set; }
+        public int strength { get; set; }
+        public int strengthModifier { get; set; }
+        public int totalHitPoints { get; set; }
+        public int currentHitPoints { get; set; }
+        public States currentState { get; set; }
+        public Positions startingPosition { get; set; }
+        public Positions currentPosition { get; set; }
+        public int slotsAvailable { get; set; }
+        public Action[] activeAbilities { get; set; }
+        public Action[] inactiveAbilities { get; set; }
+        
+        //Any time you use an ability
+        public int battleXp { get; set; }
+        //anytime you move
+        public int moveXP { get; set; }
+        //anytime you hold or use defense
+        public int defenseXP { get; set; }
+
+        public Meb() { }
+
+    }
+
     class Action: Entity
     {
-        public string type { get; set; }
-        public string[] advantage { get; set; }
-        public string[] disadvantage { get; set; }
-
-            public Action()
+        public Types type { get; set; }
+        public Types[] advantage { get; set; }
+        public Types[] disadvantage { get; set; }
+                    public Action()
             {
             }
 
-            public Action(string entityName, string actionType, string entityAbbreviation, string[] actionAdvantage, string[] actionDisadvantage)
+            public Action(string entityName, Types actionType, string entityAbbreviation, Types[] actionAdvantage, Types[] actionDisadvantage)
         {
             name = entityName;
             type = actionType;
@@ -54,8 +113,19 @@ namespace rockPaperScissors
 
     }
 
-    class Special : Action
+    class Attack : Action
     {
+        public int damage { get; set; }
+
+        public Attack(string entityName, Types actionType, string entityAbbreviation, Types[] actionAdvantage, Types[] actionDisadvantage, int attackDamage)
+        {
+            name = entityName;
+            type = actionType;
+            abbreviation = entityAbbreviation;
+            advantage = actionAdvantage;
+            disadvantage = actionDisadvantage;
+            damage = attackDamage;
+        }
 
     }
 
@@ -65,12 +135,12 @@ namespace rockPaperScissors
         {
 
             //Create all options in game
-            rockPaperScissors.Action rock = new Action("rock", "rock", "r", new string[] { "scissors" }, new string[] { "paper" });
-            rockPaperScissors.Action paper = new Action("paper", "paper", "p", new string[] { "rock" }, new string[] { "scissors" });
-            rockPaperScissors.Action scissors = new Action("scissors", "scissors", "s", new string[] { "paper" }, new string[] { "rock" });
+            rockPaperScissors.Attack rockAttack = new Attack("rock", Types.Rock, "r", new Types[] { Types.Scissor }, new Types[] { Types.Paper }, 1);
+            rockPaperScissors.Attack paperAttack = new Attack("paper", Types.Paper, "p", new Types[] { Types.Rock }, new Types[] { Types.Scissor }, 1 );
+            rockPaperScissors.Attack scissorsAttack = new Attack("scissors", Types.Scissor, "s", new Types[] { Types.Paper }, new Types[] { Types.Rock },1);
 
             //create array with all actions
-            rockPaperScissors.Action[] actions = { rock, paper, scissors };
+            rockPaperScissors.Attack[] actions = { rockAttack, paperAttack, scissorsAttack };
 
 
             //introductions
@@ -127,7 +197,7 @@ namespace rockPaperScissors
                 }
 
                 bool correctAbbreviation = false;
-                rockPaperScissors.Action p1action = actions[0];
+                rockPaperScissors.Attack p1action = actions[0];
 
                 //Ask for input until a correct input is given.
                 do {
