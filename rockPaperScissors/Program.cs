@@ -14,6 +14,48 @@ using System;
 namespace rockPaperScissors
 {
 
+    enum States
+    {
+        Disengaged,
+        Standing,
+        Cooldown,
+        Charging,
+        Waiting,
+        Attacking,
+        Blocking,
+        Defensive,
+        Grabbed,
+        Prone,
+        Moving,
+        Jumping,
+        Flying,
+        Crouching,
+        GettingHit,
+        Fallen
+
+    }
+
+    enum Positions
+    {
+        frontline,
+        rearguard
+    }
+    enum Types
+    {
+        Rock,
+        Paper,
+        Scissor
+    }
+
+    enum AttackType
+    {
+        none,
+        Strength,
+        Grab,
+        Speed
+    }
+
+
     class Entity
     {
         public string name { get; set; }
@@ -33,38 +75,7 @@ namespace rockPaperScissors
         }
     }
 
-    enum States
-    {
-        Standing,
-        Cooldown,
-        Charging,
-        Waiting,
-        Attacking,
-        Blocking,
-        Defensive,
-        Grabbed,
-        Prone,
-        Moving,
-        Jumping,
-        Flying,
-        Crouching,
-        GettingHit,
-
-    }
-
-    enum Positions
-    {
-        frontline,
-        rearguard
-    }
-    enum Types
-    {
-        Rock,
-        Paper,
-        Scissor
-    }
-
-
+    
     class Meb : Entity
     {
         public int endurance { get; set; }
@@ -79,9 +90,10 @@ namespace rockPaperScissors
         public Positions startingPosition { get; set; }
         public Positions currentPosition { get; set; }
         public int slotsAvailable { get; set; }
-        public Action[] activeAbilities { get; set; }
-        public Action[] inactiveAbilities { get; set; }
-        
+        public Ability[] activeAbilities { get; set; }
+        public Ability[] inactiveAbilities { get; set; }
+        public Ability[] activeAttacks { get; set; }
+        public Ability[] inactiveAttacks { get; set; }
         //Any time you use an ability
         public int battleXp { get; set; }
         //anytime you move
@@ -89,42 +101,68 @@ namespace rockPaperScissors
         //anytime you hold or use defense
         public int defenseXP { get; set; }
 
-        public Meb() { }
+        public Meb() {}
 
+
+        //For New Meb
+        public Meb(string name, string abbreviation, int endurance, int speed, int strength, Attack[] activeAttacks)
+            :base(name, abbreviation)
+        {
+            this.endurance = endurance;
+            this.speed = speed;
+            this.strength = strength;
+            this.activeAttacks = activeAttacks;
+
+
+            this.enduranceModifier = 0;
+            this.speedModifier = 0;
+            this.strengthModifier = 0;
+            this.totalHitPoints = endurance*4;
+            this.currentHitPoints = endurance * 4;
+            this.currentState = States.Disengaged;
+            this.startingPosition = Positions.frontline;
+            this.currentPosition = Positions.frontline;
+            this.slotsAvailable = 1;
+            this.battleXp = 0;
+            this.moveXP = 0;
+            this.defenseXP = 0;
+            this.activeAttacks = activeAttacks;
+
+        }
     }
 
-    class Action: Entity
+    class Ability: Entity
     {
         public Types type { get; set; }
         public Types[] advantage { get; set; }
         public Types[] disadvantage { get; set; }
-                    public Action()
-            {
-            }
+                    public Ability()
+                        {
+                        }
 
-            public Action(string entityName, Types actionType, string entityAbbreviation, Types[] actionAdvantage, Types[] actionDisadvantage)
+            public Ability(string entityName, Types abilityType, string entityAbbreviation, Types[] abilityAdvantage, Types[] abilityDisadvantage)
+            : base(entityName, entityAbbreviation)
         {
-            name = entityName;
-            type = actionType;
-            abbreviation = entityAbbreviation;
-            advantage = actionAdvantage;
-            disadvantage = actionDisadvantage;
+            type = abilityType;
+            advantage = abilityAdvantage;
+            disadvantage = abilityDisadvantage;
         }
 
     }
 
-    class Attack : Action
+    class Attack : Ability
     {
-        public int damage { get; set; }
+        public int damageModifier { get; set; }
 
-        public Attack(string entityName, Types actionType, string entityAbbreviation, Types[] actionAdvantage, Types[] actionDisadvantage, int attackDamage)
+        public int damageOutput { get; set; }
+
+        public AttackType attackType { get; set; }
+
+        public Attack(string entityName, Types abilityType, string entityAbbreviation, Types[] abilityAdvantage, Types[] abilityDisadvantage, int attackDamage, AttackType attackAttackType)
+            :base(entityName, abilityType, entityAbbreviation, abilityAdvantage, abilityDisadvantage)
         {
-            name = entityName;
-            type = actionType;
-            abbreviation = entityAbbreviation;
-            advantage = actionAdvantage;
-            disadvantage = actionDisadvantage;
-            damage = attackDamage;
+            damageModifier = attackDamage;
+            attackType = attackAttackType;
         }
 
     }
@@ -135,12 +173,31 @@ namespace rockPaperScissors
         {
 
             //Create all options in game
-            rockPaperScissors.Attack rockAttack = new Attack("rock", Types.Rock, "r", new Types[] { Types.Scissor }, new Types[] { Types.Paper }, 1);
-            rockPaperScissors.Attack paperAttack = new Attack("paper", Types.Paper, "p", new Types[] { Types.Rock }, new Types[] { Types.Scissor }, 1 );
-            rockPaperScissors.Attack scissorsAttack = new Attack("scissors", Types.Scissor, "s", new Types[] { Types.Paper }, new Types[] { Types.Rock },1);
+            rockPaperScissors.Attack rockAttack = new Attack("rock", Types.Rock, "r", new Types[] { Types.Scissor }, new Types[] { Types.Paper }, 1, AttackType.none);
+            rockPaperScissors.Attack paperAttack = new Attack("paper", Types.Paper, "p", new Types[] { Types.Rock }, new Types[] { Types.Scissor }, 1, AttackType.none);
+            rockPaperScissors.Attack scissorsAttack = new Attack("scissors", Types.Scissor, "s", new Types[] { Types.Paper }, new Types[] { Types.Rock },1, AttackType.none);
 
-            //create array with all actions
-            rockPaperScissors.Attack[] actions = { rockAttack, paperAttack, scissorsAttack };
+            //create array with all abilities
+            rockPaperScissors.Attack[] abilities = { rockAttack, paperAttack, scissorsAttack };
+
+
+            //create player meb
+            Meb[] player1Mebs = { 
+                new Meb("rock Meb", "r", 1, 1, 1, new Attack[] { rockAttack }),
+                new Meb("paper Meb", "p", 1, 1, 1, new Attack[] { paperAttack }),
+                new Meb("scissors Meb", "s", 1, 1, 1, new Attack[] { scissorsAttack })
+            };
+
+            Random numberGen = new Random();
+            int p2Choice = 0;
+
+            p2Choice = numberGen.Next(0, abilities.Length);
+            Meb player2Meb1 = new Meb("black Meb", "r", 1, 1, 1, new Attack[] { abilities[p2Choice] });
+            
+
+
+
+            
 
 
             //introductions
@@ -197,7 +254,7 @@ namespace rockPaperScissors
                 }
 
                 bool correctAbbreviation = false;
-                rockPaperScissors.Attack p1action = actions[0];
+                rockPaperScissors.Attack p1ability = abilities[0];
 
                 //Ask for input until a correct input is given.
                 do {
@@ -205,33 +262,33 @@ namespace rockPaperScissors
                     Console.Write(username + " choose ");
 
                     //Use the quantity of plays to go through each to write the possible options.
-                    for (int j = 0; j < actions.Length; j++)
+                    for (int j = 0; j < abilities.Length; j++)
                     {
                         //Print Play
-                        Console.Write(actions[j].type + "(" + actions[j].abbreviation + ")");
+                        Console.Write(abilities[j].type + "(" + abilities[j].abbreviation + ")");
 
                         //If second to last play write or
-                        if (j == (actions.Length - 2))
+                        if (j == (abilities.Length - 2))
                         {
                             Console.Write(" or ");
                         }
                         //Otherwise put a , with a space
-                        else if (j != (actions.Length - 1))
+                        else if (j != (abilities.Length - 1))
                         {
                             Console.Write(", ");
                         }
                     }
                     Console.WriteLine(".");
-                    string actionChosen = (Console.ReadLine());
+                    string abilityChosen = (Console.ReadLine());
                     
 
-                    for (int j = 0; j < actions.Length; j++)
+                    for (int j = 0; j < abilities.Length; j++)
                     {
 
-                        if (actions[j].abbreviation == actionChosen)
+                        if (abilities[j].abbreviation == abilityChosen)
                         {
-                            Console.WriteLine(username + " chose: " + actions[j].type);
-                            p1action = actions[j];
+                            Console.WriteLine(username + " chose: " + abilities[j].type);
+                            p1ability = abilities[j];
                             correctAbbreviation = true;
                         }
 
@@ -245,29 +302,29 @@ namespace rockPaperScissors
 
                 } while (correctAbbreviation == false);
                 
-                    Random numberGen = new Random();
-                    int p2Choice = 0;
-                    p2Choice = numberGen.Next(0, actions.Length);
+                   
 
-                    rockPaperScissors.Action p2action = actions[p2Choice];
+                    p2Choice = numberGen.Next(0, abilities.Length);
 
-                    Console.WriteLine(computerplayer + " chose: " + p2action.type);
+                    rockPaperScissors.Ability p2ability = abilities[p2Choice];
 
-                    for (int j = 0; j < p1action.advantage.Length; j++)
+                    Console.WriteLine(computerplayer + " chose: " + p2ability.type);
+
+                    for (int j = 0; j < p1ability.advantage.Length; j++)
                     {
-                        if (p1action.advantage[j] == p2action.type)
+                        if (p1ability.advantage[j] == p2ability.type)
                         {
                             Console.WriteLine(username + " wins! ");
                             p1wins++;
 
                         }
-                        else if (p1action.disadvantage[j] == p2action.type)
+                        else if (p1ability.disadvantage[j] == p2ability.type)
                         {
                             Console.WriteLine(username + " loses! ");
                             p1loses++;
 
                         }
-                        else if (p1action.type == p2action.type)
+                        else if (p1ability.type == p2ability.type)
                         {
                             Console.WriteLine(" DRAW ");
                         }
